@@ -306,3 +306,6 @@ Contributions are welcome! Please open an issue or pull request on GitHub.
 - [nvim-jdtls](https://github.com/mfussenegger/nvim-jdtls) — Java LSP
 
 ---
+## License
+
+MIT License — see [LICENSE](LICENSE) for details.
