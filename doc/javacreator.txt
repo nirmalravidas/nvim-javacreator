@@ -1,0 +1,140 @@
+*javacreator.txt*  Java file creator and project detection for Neovim
+
+==============================================================================
+CONTENTS                                                  *javacreator-contents*
+
+  1. Introduction ............ |javacreator-introduction|
+  2. Requirements ............ |javacreator-requirements|
+  3. Installation ............ |javacreator-installation|
+  4. Configuration ........... |javacreator-configuration|
+  5. Keymaps ................. |javacreator-keymaps|
+  6. Commands ................ |javacreator-commands|
+  7. Java File Creator ....... |javacreator-creator|
+  8. Project Detection ....... |javacreator-detection|
+
+==============================================================================
+1. INTRODUCTION                                       *javacreator-introduction*
+
+nvim-javacreator does two things:
+
+  1. Detects your project type on startup and creates .neoconf.json
+     to isolate LSP servers per project
+
+  2. Creates Java files from templates with correct package name
+     and Spring Boot annotations already filled in
+
+==============================================================================
+2. REQUIREMENTS                                       *javacreator-requirements*
+
+  - Neovim >= 0.9
+  - LazyVim (https://lazyvim.org)
+  - LazyVim extras:
+      lang.java
+      lsp.neoconf
+
+==============================================================================
+3. INSTALLATION                                       *javacreator-installation*
+
+Step 1 - Enable LazyVim extras: >
+  :LazyExtras
+
+  Press x on:
+    lang.java
+    lsp.neoconf
+
+Step 2 - Create plugin file:
+  ~/.config/nvim/lua/plugins/javacreator.lua >
+
+  return {
+    {
+      "nirmalravidas/nvim-javacreator",
+      opts = {},
+    },
+  }
+
+
+Step 3 - Sync: >
+  :Lazy sync
+
+
+==============================================================================
+4. CONFIGURATION                                     *javacreator-configuration*
+
+Works out of the box. To customize: >
+
+  {
+    "nirmalravidas/nvim-javacreator",
+    opts = {
+      detect = {
+        enabled             = true,
+        auto_create_neoconf = true,
+        notify              = true,
+      },
+      creator = {
+        enabled = true,
+        keymap  = "<leader>jn",
+      },
+    },
+  }
+
+
+==============================================================================
+5. KEYMAPS                                               *javacreator-keymaps*
+
+  <leader>jn   Create new Java file from template
+
+==============================================================================
+6. COMMANDS                                             *javacreator-commands*
+
+  :JavaCreatorNew    Create a new Java file with template
+  :JavaCreatorInfo   Show current project type and status
+
+==============================================================================
+7. JAVA FILE CREATOR                                     *javacreator-creator*
+
+Press <leader>jn or run :JavaCreatorNew to create a new Java file.
+
+nvim-javacreator detects target directory from:
+  1. Current open java file directory
+  2. src/main/java in project root
+  3. Current working directory
+
+Available templates:
+
+  Class           plain class
+  Interface       plain interface
+  Enum            plain enum
+  Record          plain record
+  Annotation      @interface
+  REST Controller @RestController + @RequestMapping
+  Service         @Service
+  Repository      @Repository + JpaRepository
+  Entity          @Entity + @Table + @Id
+  Component       @Component
+  Configuration   @Configuration
+
+Package name is auto detected from folder path.
+Example - if you create a file in:
+  src/main/java/com/myapp/service/
+
+Package will be set to:
+  com.myapp.service
+
+==============================================================================
+8. PROJECT DETECTION                                     *javacreator-detection*
+
+nvim-javacreator detects project type on startup and creates .neoconf.json
+to isolate LSP servers so intellisense never mixes between projects.
+
+  Project Type    Detected By
+  ------------    -----------
+  Spring Boot     pom.xml or build.gradle
+  React           package.json
+  Python          requirements.txt or pyproject.toml
+  C++             CMakeLists.txt or *.cpp files
+
+On first open .neoconf.json is created automatically.
+If .neoconf.json already exists it will not be overwritten.
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:
